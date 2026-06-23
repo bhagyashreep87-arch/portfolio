@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bhagyashree Panda — E-Commerce Operations Lead</title>
+<meta name="description" content="Bhagyashree Panda — E-Commerce Team Lead. 5+ years in Shopify operations, catalog management, marketplace execution and SEO across Noon, Amazon and Shopify." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+  :root{
+    --bg:#070A12;
+    --bg-2:#0C111D;
+    --panel:#121829;
+    --panel-2:#19203450;
+    --line:rgba(255,255,255,0.08);
+    --line-2:rgba(255,255,255,0.14);
+    --gold:#E6C079;
+    --gold-2:#F4DDA3;
+    --aqua:#43DCC0;
+    --aqua-2:#7EEFDC;
+    --text:#F4F2EC;
+    --muted:#9AA2B6;
+    --muted-2:#646C82;
+    --r:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',system-ui,sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--gold);color:#0a0a0a}
+
+  /* ---------- 3D background ---------- */
+  #bg-canvas{
+    position:fixed;inset:0;width:100%;height:100%;
+    z-index:0;pointer-events:none;
+  }
+  .bg-veil{
+    position:fixed;inset:0;z-index:1;pointer-events:none;
+    background:
+      radial-gradient(120% 70% at 50% 0%, rgba(230,192,121,0.07), transparent 50%),
+      linear-gradient(180deg, rgba(7,10,18,0.35) 0%, rgba(7,10,18,0.78) 42%, rgba(7,10,18,0.94) 75%, rgba(7,10,18,1) 100%);
+  }
+  .wrap{position:relative;z-index:2}
+
+  /* ---------- typography helpers ---------- */
+  .eyebrow{
+    font-family:'Space Mono',monospace;
+    font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--gold);display:inline-flex;align-items:center;gap:.6rem;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--gold);opacity:.7}
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif;font-weight:700;line-height:1.05;letter-spacing:-.02em}
+  .mono{font-family:'Space Mono',monospace}
+
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:1.1rem clamp(1.2rem,5vw,4rem);
+    backdrop-filter:blur(10px);
+    background:linear-gradient(180deg, rgba(7,10,18,0.7), rgba(7,10,18,0));
+    transition:background .3s ease;
+  }
+  .brand{display:flex;align-items:center;gap:.7rem;font-family:'Space Grotesk';font-weight:700;letter-spacing:.04em}
+  .brand .mark{
+    width:38px;height:38px;border-radius:10px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--gold),#caa052);color:#0a0a0a;font-size:.9rem;
+    box-shadow:0 6px 22px rgba(230,192,121,.28);
+  }
+  .nav-links{display:flex;gap:2rem;font-size:.9rem;color:var(--muted)}
+  .nav-links a{position:relative;transition:color .25s}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:-5px;width:0;height:1px;background:var(--gold);transition:width .3s}
+  .nav-links a:hover{color:var(--text)}
+  .nav-links a:hover::after{width:100%}
+  .nav-links a:focus-visible{outline:2px solid var(--gold);outline-offset:4px;border-radius:3px}
+  @media(max-width:720px){.nav-links{display:none}}
+
+  /* ---------- hero ---------- */
+  header.hero{
+    min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+    padding:8rem clamp(1.2rem,5vw,4rem) 4rem;position:relative;
+  }
+  .hero-inner{max-width:1100px}
+  .hero h1{
+    font-size:clamp(2.6rem,8vw,6.4rem);margin:1.4rem 0 .4rem;
+  }
+  .hero h1 .accent{
+    background:linear-gradient(120deg,var(--gold-2),var(--gold) 40%,var(--aqua) 120%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero .sub{
+    font-size:clamp(1rem,2.4vw,1.4rem);color:var(--muted);max-width:640px;margin-top:1.2rem;
+  }
+  .hero .sub b{color:var(--text);font-weight:600}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:1.4rem;margin-top:2rem;font-size:.85rem;color:var(--muted);font-family:'Space Mono'}
+  .hero-meta span{display:flex;align-items:center;gap:.5rem}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--aqua);box-shadow:0 0 12px var(--aqua)}
+  .cta-row{display:flex;flex-wrap:wrap;gap:1rem;margin-top:2.6rem}
+  .btn{
+    display:inline-flex;align-items:center;gap:.6rem;
+    padding:.85rem 1.5rem;border-radius:999px;font-weight:600;font-size:.92rem;
+    transition:transform .25s ease, box-shadow .25s ease, background .25s;
+  }
+  .btn.primary{background:linear-gradient(135deg,var(--gold),#cda255);color:#0a0a0a;box-shadow:0 10px 30px rgba(230,192,121,.25)}
+  .btn.primary:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(230,192,121,.4)}
+  .btn.ghost{border:1px solid var(--line-2);color:var(--text)}
+  .btn.ghost:hover{transform:translateY(-3px);border-color:var(--gold);background:rgba(230,192,121,.06)}
+  .btn:focus-visible{outline:2px solid var(--aqua);outline-offset:3px}
+  .scroll-cue{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;color:var(--muted-2);font-family:'Space Mono';font-size:.65rem;letter-spacing:.25em}
+  .scroll-cue .bar{width:1px;height:42px;background:linear-gradient(var(--gold),transparent);animation:cue 2.2s infinite}
+  @keyframes cue{0%{transform:scaleY(.3);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}100%{transform:scaleY(.3);transform-origin:top}}
+
+  /* reveal on load */
+  .load{opacity:0;transform:translateY(26px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
+  .load.d1{animation-delay:.05s}.load.d2{animation-delay:.18s}.load.d3{animation-delay:.32s}
+  .load.d4{animation-delay:.46s}.load.d5{animation-delay:.6s}
+  @keyframes rise{to{opacity:1;transform:none}}
+
+  /* ---------- sections ---------- */
+  section{padding:clamp(4rem,9vw,8rem) clamp(1.2rem,5vw,4rem);position:relative;background:rgba(7,10,18,0.92);z-index:2}
+  footer{position:relative;z-index:2;background:rgba(7,10,18,0.96)}
+  .sec-head{max-width:760px;margin-bottom:3.2rem}
+  .sec-head h2{font-size:clamp(1.9rem,5vw,3.2rem);margin-top:1rem}
+  .sec-head p{color:var(--muted);margin-top:1rem;font-size:1.05rem}
+
+  /* scroll reveal */
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ---------- stats band ---------- */
+  .stats-band{
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(18,24,41,.55),rgba(12,17,29,.2));
+  }
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+  .stat{background:var(--bg-2);padding:2.4rem 1.8rem;position:relative;transition:background .3s}
+  .stat:hover{background:var(--panel)}
+  .stat .num{font-family:'Space Mono';font-weight:700;font-size:clamp(2.4rem,6vw,4rem);line-height:1;color:var(--gold);display:flex;align-items:baseline;gap:.1rem}
+  .stat .num .suf{font-size:.5em;color:var(--aqua)}
+  .stat .lbl{margin-top:.9rem;font-size:.82rem;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;font-family:'Space Mono'}
+  .stat::after{content:"";position:absolute;left:1.8rem;top:1.4rem;width:24px;height:2px;background:linear-gradient(90deg,var(--gold),transparent)}
+  @media(max-width:880px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:460px){.stats-grid{grid-template-columns:1fr}}
+
+  /* ---------- capabilities ---------- */
+  .cap-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.2rem}
+  .cap{
+    border:1px solid var(--line);border-radius:var(--r);padding:2rem 1.8rem;
+    background:linear-gradient(180deg,rgba(18,24,41,.4),rgba(10,14,24,.2));
+    position:relative;overflow:hidden;transition:transform .35s cubic-bezier(.2,.7,.2,1),border-color .35s;
+  }
+  .cap::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 0% 0%,rgba(230,192,121,.12),transparent 50%);opacity:0;transition:opacity .4s}
+  .cap:hover{transform:translateY(-8px);border-color:var(--line-2)}
+  .cap:hover::before{opacity:1}
+  .cap .ic{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;background:rgba(230,192,121,.1);border:1px solid rgba(230,192,121,.25);margin-bottom:1.3rem}
+  .cap .ic svg{width:24px;height:24px;stroke:var(--gold);fill:none;stroke-width:1.6}
+  .cap h3{font-size:1.2rem;margin-bottom:.7rem}
+  .cap p{color:var(--muted);font-size:.95rem}
+  .cap .idx{position:absolute;top:1.4rem;right:1.6rem;font-family:'Space Mono';font-size:.75rem;color:var(--muted-2)}
+
+  /* ---------- process strip ---------- */
+  .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:1rem}
+  .flow .step{position:relative;padding:1.6rem;border:1px dashed var(--line-2);border-radius:var(--r);background:rgba(12,17,29,.4)}
+  .flow .step .n{font-family:'Space Mono';color:var(--aqua);font-size:.8rem}
+  .flow .step h3{font-size:1.1rem;margin:.6rem 0 .4rem}
+  .flow .step p{color:var(--muted);font-size:.85rem}
+  .flow .step::after{content:"→";position:absolute;right:-1rem;top:50%;transform:translateY(-50%);color:var(--gold);font-size:1.2rem;z-index:3}
+  .flow .step:last-child::after{display:none}
+  @media(max-width:880px){.flow{grid-template-columns:1fr 1fr}.flow .step:nth-child(2)::after,.flow .step:last-child::after{display:none}}
+
+  /* ---------- experience timeline ---------- */
+  .timeline{position:relative;max-width:980px}
+  .timeline::before{content:"";position:absolute;left:14px;top:8px;bottom:8px;width:2px;background:linear-gradient(var(--gold),var(--aqua),transparent)}
+  .exp{position:relative;padding-left:3.4rem;margin-bottom:2rem}
+  .exp .node{position:absolute;left:6px;top:14px;width:18px;height:18px;border-radius:50%;background:var(--bg);border:2px solid var(--gold);box-shadow:0 0 0 5px rgba(230,192,121,.08)}
+  .exp .card{
+    border:1px solid var(--line);border-radius:var(--r);padding:1.8rem 1.9rem;
+    background:linear-gradient(160deg,rgba(18,24,41,.55),rgba(10,14,24,.25));
+    transform-style:preserve-3d;transition:transform .2s ease,border-color .3s,box-shadow .3s;will-change:transform;
+  }
+  .exp .card:hover{border-color:var(--line-2);box-shadow:0 24px 50px rgba(0,0,0,.4)}
+  .exp .top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.6rem;align-items:baseline}
+  .exp .role{font-family:'Space Grotesk';font-weight:600;font-size:1.25rem}
+  .exp .co{color:var(--gold);font-size:.95rem;font-weight:500}
+  .exp .when{font-family:'Space Mono';font-size:.75rem;color:var(--muted-2);white-space:nowrap}
+  .exp ul{list-style:none;margin-top:1rem;display:grid;gap:.55rem}
+  .exp li{position:relative;padding-left:1.3rem;color:var(--muted);font-size:.92rem}
+  .exp li::before{content:"";position:absolute;left:0;top:.6rem;width:6px;height:6px;border-radius:2px;background:var(--aqua);opacity:.8}
+  .chip{display:inline-block;margin-top:1.1rem;padding:.4rem .85rem;border-radius:999px;font-family:'Space Mono';font-size:.72rem;letter-spacing:.05em;color:var(--gold);background:rgba(230,192,121,.08);border:1px solid rgba(230,192,121,.22)}
+
+  /* ---------- skills ---------- */
+  .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.4rem}
+  .skill-col{border:1px solid var(--line);border-radius:var(--r);padding:1.8rem;background:rgba(12,17,29,.4)}
+  .skill-col h3{font-size:1rem;color:var(--aqua);font-family:'Space Mono';font-weight:400;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1.2rem;font-size:.8rem}
+  .tags{display:flex;flex-wrap:wrap;gap:.55rem}
+  .tag{padding:.5rem .9rem;border-radius:8px;font-size:.85rem;border:1px solid var(--line);background:rgba(255,255,255,.02);transition:transform .25s,border-color .25s,color .25s}
+  .tag:hover{transform:translateY(-3px);border-color:var(--gold);color:var(--gold)}
+  .bar-row{margin-bottom:1.1rem}
+  .bar-row .bt{display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:.4rem}
+  .bar-row .bt span:last-child{font-family:'Space Mono';color:var(--muted)}
+  .bar{height:6px;border-radius:3px;background:rgba(255,255,255,.06);overflow:hidden}
+  .bar i{display:block;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--aqua));transition:width 1.3s cubic-bezier(.2,.7,.2,1)}
+
+  /* ---------- contact ---------- */
+  .contact{text-align:center;max-width:760px;margin:0 auto}
+  .contact h2{font-size:clamp(2rem,6vw,3.6rem);margin:1rem 0}
+  .contact p{color:var(--muted);font-size:1.1rem}
+  .contact .mail{display:inline-block;margin-top:1.6rem;font-family:'Space Grotesk';font-weight:600;font-size:clamp(1.1rem,3vw,1.6rem);color:var(--gold);position:relative}
+  .contact .mail::after{content:"";position:absolute;left:0;bottom:-4px;width:100%;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .35s}
+  .contact .mail:hover::after{transform:scaleX(1)}
+  .links{display:flex;justify-content:center;flex-wrap:wrap;gap:1rem;margin-top:2rem}
+  .visa{display:inline-flex;align-items:center;gap:.6rem;margin-top:2.4rem;padding:.6rem 1.2rem;border-radius:999px;border:1px solid rgba(67,220,192,.3);background:rgba(67,220,192,.06);font-family:'Space Mono';font-size:.78rem;color:var(--aqua-2)}
+  footer{padding:2.5rem;text-align:center;color:var(--muted-2);font-size:.8rem;border-top:1px solid var(--line);font-family:'Space Mono'}
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .reveal{opacity:1;transform:none}
+    .load{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<div class="bg-veil"></div>
+
+<div class="wrap">
+  <nav id="nav">
+    <div class="brand"><span class="mark">BP</span> Bhagyashree Panda</div>
+    <div class="nav-links">
+      <a href="#stats">Impact</a>
+      <a href="#work">What I Do</a>
+      <a href="#experience">Experience</a>
+      <a href="#skills">Toolbox</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow load d1">E-Commerce Team Lead · Dubai, UAE</div>
+      <h1 class="load d2">Online stores,<br><span class="accent">run like a system.</span></h1>
+      <p class="sub load d3">I'm <b>Bhagyashree Panda</b> — 5+ years turning messy catalogs, listings and marketplace operations into clean, high-converting, measurable storefronts across <b>Shopify, Noon &amp; Amazon</b>.</p>
+      <div class="hero-meta load d4">
+        <span><span class="dot"></span> Catalog &amp; Marketplace Ops</span>
+        <span><span class="dot"></span> PDP · SEO · Conversion</span>
+        <span><span class="dot"></span> Cross-functional Lead</span>
+      </div>
+      <div class="cta-row load d5">
+        <a class="btn primary" href="#contact">Let's talk →</a>
+        <a class="btn ghost" href="#experience">See the work</a>
+      </div>
+    </div>
+    <div class="scroll-cue"><span>SCROLL</span><span class="bar"></span></div>
+  </header>
+
+  <!-- STATS -->
+  <section id="stats" class="stats-band">
+    <div class="sec-head reveal">
+      <div class="eyebrow">The Numbers</div>
+      <h2>Operations you can measure.</h2>
+      <p>A snapshot of the work — pulled straight from the roles, not rounded up.</p>
+    </div>
+    <div class="stats-grid reveal">
+      <div class="stat"><div class="num" data-to="5"><span data-count>0</span><span class="suf">+</span></div><div class="lbl">Years in<br>E-Commerce</div></div>
+      <div class="stat"><div class="num" data-to="40"><span data-count>0</span><span class="suf">%</span></div><div class="lbl">Manual effort<br>reduced</div></div>
+      <div class="stat"><div class="num" data-to="100"><span data-count>0</span><span class="suf">+</span></div><div class="lbl">Dispute cases<br>solved daily</div></div>
+      <div class="stat"><div class="num" data-to="48"><span data-count>0</span><span class="suf">h</span></div><div class="lbl">Resolution<br>turnaround</div></div>
+    </div>
+    <div class="stats-grid reveal" style="margin-top:1px">
+      <div class="stat"><div class="num" data-to="6"><span data-count>0</span></div><div class="lbl">Roles across<br>the journey</div></div>
+      <div class="stat"><div class="num" data-to="3"><span data-count>0</span></div><div class="lbl">Marketplaces<br>&amp; platforms</div></div>
+      <div class="stat"><div class="num" data-to="4"><span data-count>0</span></div><div class="lbl">Cross-functional<br>teams aligned</div></div>
+      <div class="stat"><div class="num" data-to="9"><span data-count>0</span></div><div class="lbl">Years total<br>experience</div></div>
+    </div>
+  </section>
+
+  <!-- CAPABILITIES -->
+  <section id="work">
+    <div class="sec-head reveal">
+      <div class="eyebrow">What I Do</div>
+      <h2>Six things I own end-to-end.</h2>
+      <p>From the first product upload to the conversion report — I keep the whole storefront pipeline accurate, optimized and on schedule.</p>
+    </div>
+    <div class="cap-grid">
+      <div class="cap reveal"><span class="idx">01</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 7h18M3 12h18M3 17h18"/><circle cx="6" cy="7" r="0.5"/></svg></div>
+        <h3>Catalog &amp; Listing Operations</h3>
+        <p>End-to-end product listings and bulk catalog uploads across verticals — accurate titles, attributes, tags and category mapping that pass marketplace QA the first time.</p>
+      </div>
+      <div class="cap reveal"><span class="idx">02</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 18v2M16 18v2"/></svg></div>
+        <h3>PDP &amp; A+ Content</h3>
+        <p>Built and implemented A+ content that lifts Product Detail Page engagement, content quality and conversion potential — turning flat listings into pages that sell.</p>
+      </div>
+      <div class="cap reveal"><span class="idx">03</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg></div>
+        <h3>SEO &amp; Keyword Strategy</h3>
+        <p>Organic visibility through SEO-optimized listings and keyword strategy — getting products found, ranked and clicked without leaning only on paid spend.</p>
+      </div>
+      <div class="cap reveal"><span class="idx">04</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 4h16v6H4zM4 14h16v6H4z"/><path d="M8 7h.01M8 17h.01"/></svg></div>
+        <h3>Marketplace Execution</h3>
+        <p>Hands-on across Shopify, Noon and Amazon — seller coordination, approvals, documentation and Fulfilment-by-Noon slot booking for fast, clean go-lives.</p>
+      </div>
+      <div class="cap reveal"><span class="idx">05</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 4 8-8"/><path d="M21 8v5h-5"/></svg></div>
+        <h3>Pricing, Inventory &amp; KPIs</h3>
+        <p>Daily pricing updates, inventory coordination and KPI tracking — sales trend, OOS%, cancellation and listing health monitored to drive data-backed fixes.</p>
+      </div>
+      <div class="cap reveal"><span class="idx">06</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"/></svg></div>
+        <h3>Campaign &amp; Team Coordination</h3>
+        <p>The connective tissue between Tech, Design, Logistics and Finance — keeping campaigns, system accuracy and promotional launches running without dropped handoffs.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section>
+    <div class="sec-head reveal">
+      <div class="eyebrow">How I Work</div>
+      <h2>A repeatable operating loop.</h2>
+      <p>Every storefront I touch moves through the same four-stage rhythm — so improvements stick instead of resetting each quarter.</p>
+    </div>
+    <div class="flow">
+      <div class="step reveal"><div class="n">STAGE 01</div><h3>Audit</h3><p>Catalog quality, listing health, OOS% and metadata compliance — find what's leaking conversion.</p></div>
+      <div class="step reveal"><div class="n">STAGE 02</div><h3>Optimize</h3><p>Fix listings, rebuild PDPs and A+ content, tune SEO and keywords for visibility.</p></div>
+      <div class="step reveal"><div class="n">STAGE 03</div><h3>Coordinate</h3><p>Align Tech, Design, Logistics &amp; Finance so campaigns launch accurately and on time.</p></div>
+      <div class="step reveal"><div class="n">STAGE 04</div><h3>Measure</h3><p>Track KPIs, automate the repeatable, and feed the data back into the next cycle.</p></div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="sec-head reveal">
+      <div class="eyebrow">The Journey</div>
+      <h2>Nine years, from disputes to storefront leadership.</h2>
+      <p>A path that started in transaction accuracy and customer recovery — and grew into owning full e-commerce operations.</p>
+    </div>
+    <div class="timeline">
+      <div class="exp reveal"><span class="node"></span>
+        <div class="card tilt">
+          <div class="top"><div><div class="role">E-Commerce Team Lead</div><div class="co">IB Monotaro Pvt Ltd · New Delhi</div></div><div class="when">NOV 2022 — PRESENT</div></div>
+          <ul>
+            <li>Run daily e-commerce operations — product listings, pricing updates, inventory coordination and order tracking for smooth online sales.</li>
+            <li>Support digital marketing through SEO-optimized listings, promotional updates and performance tracking.</li>
+            <li>Monitor and analyze KPIs — sales trends, OOS%, cancellation rates and listing health — to drive data-backed improvements.</li>
+            <li>Coordinate Tech, Design, Logistics and Finance for seamless campaign execution and system accuracy.</li>
+          </ul>
+          <span class="chip">↳ Automation &amp; process work cut manual effort 30–40%</span>
+        </div>
+      </div>
+
+      <div class="exp reveal"><span class="node"></span>
+        <div class="card tilt">
+          <div class="top"><div><div class="role">Senior Content Associate — Catalog Operations</div><div class="co">Noon Ecommerce · Gurgaon</div></div><div class="when">OCT 2020 — OCT 2022</div></div>
+          <ul>
+            <li>Managed end-to-end listings and bulk catalog uploads across multiple verticals — titles, descriptions, attributes, tags and category mapping to marketplace standard.</li>
+            <li>Led A+ content creation to lift PDP engagement, content quality and conversion potential.</li>
+            <li>Ran catalog quality audits against Noon's content, image and metadata guidelines — reducing rejections and content errors.</li>
+            <li>Coordinated sellers on approvals, documentation and FBN warehouse slot booking for faster go-live.</li>
+          </ul>
+          <span class="chip">↳ Multi-vertical catalog · faster, cleaner go-lives</span>
+        </div>
+      </div>
+
+      <div class="exp reveal"><span class="node"></span>
+        <div class="card tilt">
+          <div class="top"><div><div class="role">Business Development Executive</div><div class="co">Bizanekdotes · Gurgaon</div></div><div class="when">JUN 2019 — SEP 2020</div></div>
+          <ul>
+            <li>Created marketing content and creatives for digital campaigns, client proposals and BTL initiatives.</li>
+            <li>Executed brand exhibitions and on-ground activations with vendors and internal stakeholders.</li>
+            <li>Managed client communication and drove lead generation through intent-based digital campaigns.</li>
+          </ul>
+          <span class="chip">↳ Brand activation + intent-based lead gen</span>
+        </div>
+      </div>
+
+      <div class="exp reveal"><span class="node"></span>
+        <div class="card tilt">
+          <div class="top"><div><div class="role">Associate — Order &amp; Device Management</div><div class="co">Zomato Media Pvt Ltd · Gurgaon</div></div><div class="when">APR 2018 — APR 2019</div></div>
+          <ul>
+            <li>Provided real-time chat support to resolve order issues, delays and escalations within SLA.</li>
+            <li>Coordinated restaurant partners and logistics teams on device queries, discrepancies and delivery tracking.</li>
+            <li>Built order-recovery workflows that reduced cancellations and improved customer satisfaction.</li>
+          </ul>
+          <span class="chip">↳ Order recovery · fewer cancellations</span>
+        </div>
+      </div>
+
+      <div class="exp reveal"><span class="node"></span>
+        <div class="card tilt">
+          <div class="top"><div><div class="role">Dispute Analyst</div><div class="co">American Express · FIS Global · Gurgaon</div></div><div class="when">JAN 2017 — MAR 2018</div></div>
+          <ul>
+            <li>Resolved credit-card and transaction disputes within a 48-hour TAT with accuracy and regulatory compliance.</li>
+            <li>Managed 100+ cases daily — chargebacks, refunds and goodwill adjustments — while meeting SLAs.</li>
+            <li>Investigated disputed transactions and delivered clear resolution summaries to customers.</li>
+          </ul>
+          <span class="chip">↳ 100+ cases/day · 48-hour resolution TAT</span>
+        </div>
+      </div>
+
+      <div class="exp reveal"><span class="node"></span>
+        <div class="card tilt">
+          <div class="top"><div><div class="role">Bachelor of Commerce</div><div class="co">Lingaya's Lalita Devi Institute of Management &amp; Sciences · Delhi</div></div><div class="when">2016</div></div>
+          <ul>
+            <li>Foundation in commerce, finance and business operations that underpins the data-led approach to e-commerce.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Toolbox</div>
+      <h2>The stack behind the operations.</h2>
+      <p>Platforms, analytics and the disciplines I lean on to keep storefronts accurate and converting.</p>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-col reveal">
+        <h3>Platforms &amp; Marketplaces</h3>
+        <div class="tags">
+          <span class="tag">Shopify</span><span class="tag">Noon</span><span class="tag">Amazon</span>
+          <span class="tag">Fulfilment by Noon</span><span class="tag">Marketplace QA</span>
+        </div>
+      </div>
+      <div class="skill-col reveal">
+        <h3>Analytics &amp; Tracking</h3>
+        <div class="tags">
+          <span class="tag">GA4</span><span class="tag">KPI Dashboards</span><span class="tag">OOS% &amp; Listing Health</span>
+          <span class="tag">Conversion Tracking</span><span class="tag">SEO Tools</span>
+        </div>
+      </div>
+      <div class="skill-col reveal">
+        <h3>Disciplines</h3>
+        <div class="bar-row"><div class="bt"><span>Catalog &amp; Listing Ops</span><span data-pct="95">95%</span></div><div class="bar"><i data-w="95"></i></div></div>
+        <div class="bar-row"><div class="bt"><span>PDP / A+ Content</span><span data-pct="90">90%</span></div><div class="bar"><i data-w="90"></i></div></div>
+        <div class="bar-row"><div class="bt"><span>SEO &amp; Keyword Strategy</span><span data-pct="85">85%</span></div><div class="bar"><i data-w="85"></i></div></div>
+        <div class="bar-row"><div class="bt"><span>Cross-functional Coordination</span><span data-pct="92">92%</span></div><div class="bar"><i data-w="92"></i></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact reveal">
+      <div class="eyebrow" style="justify-content:center">Open to opportunities</div>
+      <h2>Let's build storefronts that <span style="color:var(--gold)">convert</span>.</h2>
+      <p>Looking for an e-commerce operations lead in Dubai who can own catalog, marketplace and conversion end-to-end? Let's talk.</p>
+      <a class="mail" href="mailto:bhagyashreep87@gmail.com">bhagyashreep87@gmail.com</a>
+      <div class="links">
+        <a class="btn ghost" href="mailto:bhagyashreep87@gmail.com">Email me</a>
+        <a class="btn ghost" href="https://www.linkedin.com/in/bhagyashree-panda-014835130/" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a class="btn ghost" href="tel:+971521034574">+971 52 103 4574</a>
+      </div>
+      <div class="visa"><span class="dot"></span> Based in Dubai, UAE · Jobseeker Visa · Ready to start</div>
+    </div>
+  </section>
+
+  <footer>© 2026 Bhagyashree Panda · E-Commerce Operations · Built for the marketplace.</footer>
+</div>
+
+<script>
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ============ 3D DATA-SURFACE BACKGROUND ============ */
+(function(){
+  if(reduce || typeof THREE === 'undefined') return;
+  const canvas = document.getElementById('bg-canvas');
+  const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 200);
+  camera.position.set(0, 12, 34);
+  camera.lookAt(0, -2, 0);
+
+  // grid of points = "data surface"
+  const COLS = 80, ROWS = 80, GAP = 1.15;
+  const total = COLS*ROWS;
+  const positions = new Float32Array(total*3);
+  const colors = new Float32Array(total*3);
+  const cGold = new THREE.Color('#E6C079');
+  const cAqua = new THREE.Color('#43DCC0');
+  let i = 0;
+  for(let x=0;x<COLS;x++){
+    for(let z=0;z<ROWS;z++){
+      positions[i*3]   = (x - COLS/2)*GAP;
+      positions[i*3+1] = 0;
+      positions[i*3+2] = (z - ROWS/2)*GAP;
+      const mix = (x/COLS);
+      const col = cGold.clone().lerp(cAqua, mix);
+      colors[i*3]=col.r; colors[i*3+1]=col.g; colors[i*3+2]=col.b;
+      i++;
+    }
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions,3));
+  geo.setAttribute('color', new THREE.BufferAttribute(colors,3));
+  const mat = new THREE.PointsMaterial({size:0.16, vertexColors:true, transparent:true, opacity:0.55, depthWrite:false});
+  const grid = new THREE.Points(geo, mat);
+  grid.rotation.x = -0.15;
+  scene.add(grid);
+
+  // floating ambient particles for depth
+  const pCount = 220;
+  const pPos = new Float32Array(pCount*3);
+  for(let k=0;k<pCount;k++){
+    pPos[k*3]   = (Math.random()-0.5)*120;
+    pPos[k*3+1] = Math.random()*40-5;
+    pPos[k*3+2] = (Math.random()-0.5)*120;
+  }
+  const pGeo = new THREE.BufferGeometry();
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos,3));
+  const pMat = new THREE.PointsMaterial({size:0.28, color:'#F4DDA3', transparent:true, opacity:0.32, depthWrite:false});
+  const dust = new THREE.Points(pGeo, pMat);
+  scene.add(dust);
+
+  let mx=0, my=0, tmx=0, tmy=0;
+  window.addEventListener('mousemove', e=>{
+    tmx = (e.clientX/window.innerWidth - 0.5);
+    tmy = (e.clientY/window.innerHeight - 0.5);
+  });
+
+  const pos = geo.attributes.position.array;
+  let t = 0;
+  function animate(){
+    t += 0.012;
+    let j=0;
+    for(let x=0;x<COLS;x++){
+      for(let z=0;z<ROWS;z++){
+        const px = (x - COLS/2)*GAP;
+        const pz = (z - ROWS/2)*GAP;
+        pos[j*3+1] = Math.sin(px*0.18 + t)*1.6 + Math.cos(pz*0.22 + t*0.8)*1.6;
+        j++;
+      }
+    }
+    geo.attributes.position.needsUpdate = true;
+
+    mx += (tmx-mx)*0.05; my += (tmy-my)*0.05;
+    grid.rotation.z = mx*0.15;
+    grid.rotation.x = -0.15 + my*0.12;
+    grid.rotation.y += 0.0008;
+    dust.rotation.y += 0.0004;
+    camera.position.x = mx*6;
+    camera.lookAt(0,-2,0);
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  window.addEventListener('resize', ()=>{
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+})();
+
+/* ============ SCROLL REVEAL ============ */
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      en.target.classList.add('in');
+      io.unobserve(en.target);
+    }
+  });
+},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ============ COUNT-UP STATS ============ */
+function countUp(el){
+  const target = parseInt(el.parentElement.getAttribute('data-to'),10);
+  if(reduce){ el.textContent = target; return; }
+  let cur = 0;
+  const dur = 1400, start = performance.now();
+  function step(now){
+    const p = Math.min((now-start)/dur, 1);
+    const eased = 1 - Math.pow(1-p, 3);
+    el.textContent = Math.round(target*eased);
+    if(p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+const statIO = new IntersectionObserver((entries)=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      en.target.querySelectorAll('[data-count]').forEach(countUp);
+      statIO.unobserve(en.target);
+    }
+  });
+},{threshold:0.4});
+document.querySelectorAll('.stats-grid').forEach(el=>statIO.observe(el));
+
+/* ============ SKILL BARS ============ */
+const barIO = new IntersectionObserver((entries)=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      en.target.querySelectorAll('.bar i').forEach(i=>{ i.style.width = i.getAttribute('data-w')+'%'; });
+      barIO.unobserve(en.target);
+    }
+  });
+},{threshold:0.3});
+document.querySelectorAll('.skill-col').forEach(el=>barIO.observe(el));
+
+/* ============ 3D TILT ON EXPERIENCE CARDS ============ */
+if(!reduce && !('ontouchstart' in window)){
+  document.querySelectorAll('.tilt').forEach(card=>{
+    card.addEventListener('mousemove', e=>{
+      const r = card.getBoundingClientRect();
+      const px = (e.clientX-r.left)/r.width - 0.5;
+      const py = (e.clientY-r.top)/r.height - 0.5;
+      card.style.transform = `perspective(900px) rotateY(${px*5}deg) rotateX(${-py*5}deg) translateY(-4px)`;
+    });
+    card.addEventListener('mouseleave', ()=>{ card.style.transform=''; });
+  });
+}
+
+/* ============ NAV BG ON SCROLL ============ */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', ()=>{
+  nav.style.background = window.scrollY>40
+    ? 'linear-gradient(180deg, rgba(7,10,18,0.92), rgba(7,10,18,0.6))'
+    : 'linear-gradient(180deg, rgba(7,10,18,0.7), rgba(7,10,18,0))';
+});
+</script>
+</body>
+</html>
